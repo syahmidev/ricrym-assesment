@@ -1,7 +1,8 @@
 import axios from 'axios';
 
 const instance = axios.create({
-    baseURL: 'http://localhost:3000', // Backend URL
+    // baseURL: 'http://localhost:3000', // Local Backend URL
+    baseURL: 'https://ricrym-assesment.vercel.app',
 });
 
 instance.interceptors.request.use(config => {

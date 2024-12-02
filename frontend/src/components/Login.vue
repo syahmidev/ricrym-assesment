@@ -46,7 +46,7 @@
 </template>
 
 <script>
-    import axios from 'axios';
+    import axios from '../axios';
 
     export default {
         data() {
@@ -63,7 +63,7 @@
             async login() {
                 try {
                     if (this.step === 1) {
-                        const response = await axios.post('http://localhost:3000/auth/login', {
+                        const response = await axios.post('/auth/login', {
                             username: this.username,
                             password: this.password,
                         });
@@ -78,7 +78,7 @@
                         }
                     } else if (this.step === 2) {
                         // Step 2: Verify 2FA code
-                        const response = await axios.post('http://localhost:3000/auth/verify-2fa', {
+                        const response = await axios.post('/auth/verify-2fa', {
                             username: this.username,
                             code: this.twoFactorCode,
                         });
