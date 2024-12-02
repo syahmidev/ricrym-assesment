@@ -19,7 +19,9 @@ app.get('/', (req, res) => {
     res.send('Backend is running!');
 });
 
-app.listen(3000, async () => {
-    await sequelize.sync();
-    console.log('Backend running at http://localhost:3000');
-});
+// app.listen(3000, async () => {
+//     await sequelize.sync();
+//     console.log('Backend running at http://localhost:3000');
+// });
+
+module.exports = app;
