@@ -1,6 +1,7 @@
 {
     "routes": [
-        { "src": "/api/(.*)", "dest": "/api/$1" },
+        { "src": "/auth/(.*)", "dest": "/api/index.js" },
+        { "src": "/scores", "dest": "/api/index.js" },
         { "src": "/(.*)", "dest": "/frontend/dist/$1" }
     ]
 }
