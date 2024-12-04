@@ -56,15 +56,17 @@ router.post('/enable-2fa', async (req, res) => {
 
 // Verify 2FA
 router.post('/verify-2fa', async (req, res) => {
-    const { username, code, secret } = req.body;
+    const { username, code, secret = null } = req.body;
 
     try {
         const account = await Account.findOne({ where: { username } });
         if (!account) return res.status(404).json({ error: 'User not found' });
 
         // Store the secret in the database
-        account.secretkey_2fa = secret;
-        await account.save();
+        if(secret != null) {
+            account.secretkey_2fa = secret;
+            await account.save();
+        }
 
         const isValid = speakeasy.totp.verify({
             secret: account.secretkey_2fa,
