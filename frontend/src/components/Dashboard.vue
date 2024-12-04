@@ -146,8 +146,8 @@
             },
             prevPage() {
                 if (this.page > 1) {
-                this.page--;
-                this.fetchScores();
+                    this.page--;
+                    this.fetchScores();
                 }
             },
             async check2FA() {

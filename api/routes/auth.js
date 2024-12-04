@@ -36,19 +36,8 @@ router.post('/login', async (req, res) => {
 // Enable 2FA
 router.post('/enable-2fa', async (req, res) => {
     try {
-        const { username } = req.body;
-
         // Generate 2FA Secret
         const secret = speakeasy.generateSecret({ length: 20 });
-        const account = await Account.findOne({ where: { username } });
-
-        if (!account) {
-            return res.status(404).json({ error: 'User not found' });
-        }
-
-        // Store the secret in the database
-        account.secretkey_2fa = secret.base32;
-        await account.save();
 
         // Generate a QR code
         const otpauthUrl = secret.otpauth_url; // OTP Auth URL
@@ -67,11 +56,15 @@ router.post('/enable-2fa', async (req, res) => {
 
 // Verify 2FA
 router.post('/verify-2fa', async (req, res) => {
-    const { username, code } = req.body;
+    const { username, code, secret } = req.body;
 
     try {
         const account = await Account.findOne({ where: { username } });
         if (!account) return res.status(404).json({ error: 'User not found' });
+
+        // Store the secret in the database
+        account.secretkey_2fa = secret;
+        await account.save();
 
         const isValid = speakeasy.totp.verify({
             secret: account.secretkey_2fa,
@@ -98,9 +91,7 @@ router.post('/check-2fa', async (req, res) => {
         const account = await Account.findOne({ where: { username } });
 
         // If the user is not found, return a 404 error
-        if (!account) {
-            return res.status(404).json({ error: 'User not found' });
-        }
+        if (!account) return res.status(404).json({ error: 'User not found' });
 
         // Check if the 2FA secret exists
         const is2FAEnabled = !!account.secretkey_2fa;
